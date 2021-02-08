@@ -9,28 +9,41 @@ var serveur = http.createServer(traitReq);
 serveur.listen(PORT);
 
 function traitReq(requete, reponse){
-    var monOBj      = url.parse(requete.url);
-    var contentType = "";
-    var fichier     = "";
-    var encodage    = "";
-    var dossier     = "";
-    
+    var monOBj       = url.parse(requete.url);
+    var contentType  = "";
+    var encodage     = "";
+    var dossier      = "";
+    var indexDupoint = monOBj.pathname.indexOf(".");
+    var extension    = monOBj.pathname.substring(indexDupoint, monOBj.pathname.length);
+    var fichier      = monOBj.pathname.substring(1, monOBj.pathname.length);
 
-    if(monOBj.pathname === "/" || monOBj.pathname === "/index.html"){
-        contentType = "text/html";
-        fichier     = "index.html";
-        encodage    = "UTF-8";
-        dossier     = "html/";
+    if(monOBj.pathname === "/"){
+        monOBj.pathname = "/index.html";
     }
-    else if(monOBj.pathname === "/style.css"){
-        contentType = "text/css";
-        fichier     = "style.css";
-        dossier     = "css/";
-    }
-    else if(monOBj.pathname === "/main.js"){
-        contentType = "application/javascript";
-        fichier     = "main.js";
-        dossier     = "js_client/";
+
+    switch(extension){
+        case ".html" :
+            contentType = "text/html";
+            encodage    = "UTF-8";
+            dossier     = "html/";
+        break;
+        case ".css" :
+            contentType = "text/css";
+            dossier     = "css/";
+        break;
+        case ".js" :
+            contentType = "application/javascript";
+            dossier     = "js_client/";
+        break;
+        case ".png" : 
+            contentType = "image/png";
+            dossier     = "assets/";
+        break;
+        case ".jpg" : 
+            contentType = "image/jpeg";
+            dossier     = "assets/";
+        break;
+        default : console.log("Erreur");
     }
 
 
