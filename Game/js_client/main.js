@@ -9,16 +9,21 @@ var config ={
     },
 }
 
-
-var player = null;
+var player          = null;
 var clickBoutonHaut = false;
-var clickBoutonBas = false;
-var cursor = null;
+var clickBoutonBas  = false;
+var cursor          = null;
 var Vkey;
+var boutonDown;
+var boutonTop;
+var isLeftDown      = false;
+var isRightDown     = false;
+var isKickDown      = false;
 
 const game = new Phaser.Game(config);
 
 function preload() {
+    this.load.image("castle", "backgroundCastles.png");
     this.load.image("player", "player.png");
     this.load.image("player_kick", "player_kick.png");
     this.load.image("player_walk1", "player_walk1.png");
@@ -30,43 +35,13 @@ function preload() {
 function create() {
     var positionCameraCentreX = this.cameras.main.centerX;
     var positionCameraCentreY = this.cameras.main.centerY;
-    player = this.add.sprite(positionCameraCentreX, positionCameraCentreY, "player");
-    
-    var down = this.add.sprite(50, 50, "bas").setInteractive();
-    var top  = this.add.sprite(100, 50, "haut").setInteractive();
-    
-    
-
-   down.on("pointerdown", function(){
-        clickBoutonBas = true;
-    });
-
-   down.on("pointerup", function(){
-        clickBoutonBas = false;
-    });
-
-    down.on("pointerout", function(){
-        clickBoutonBas = false;
-    });
-
-    top.on("pointerdown", function(){
-        clickBoutonHaut = true;
-    });
- 
-    top.on("pointerup", function(){
-        clickBoutonHaut = false;
-    });
- 
-    top.on("pointerout", function(){
-        clickBoutonHaut = false;
-    });
-
-    cursor = this.input.keyboard.createCursorKeys();
-
-    this.input.keyboard.on("keydown_B", function (){
-        
-    })
-    Vkey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V)
+    this.add.sprite(positionCameraCentreX, positionCameraCentreY, "castle");
+    player     = this.add.sprite(positionCameraCentreX, positionCameraCentreY, "player");
+    boutonDown = this.add.sprite(50, 50, "bas").setInteractive();
+    boutonTop  = this.add.sprite(100, 50, "haut").setInteractive();
+    cursor     = this.input.keyboard.createCursorKeys();
+    Vkey       = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V);
+    zoomPlayer();
 
     this.anims.create({
         key : "playerWalk",
@@ -80,20 +55,47 @@ function create() {
     player.anims.play("playerWalk");
 }
 
-
-var isLeftDown  = false;
-var isRightDown = false;
-var isKickDown  = false;
-
-
 function update(time, delta) {
+    updateZoomPlayer();
+    deplacementPlayer();
+}
+
+function zoomPlayer(){
+    boutonDown.on("pointerdown", function(){
+        clickBoutonBas = true;
+    });
+
+    boutonDown.on("pointerup", function(){
+        clickBoutonBas = false;
+    });
+
+    boutonDown.on("pointerout", function(){
+        clickBoutonBas = false;
+    });
+
+    boutonTop.on("pointerdown", function(){
+        clickBoutonHaut = true;
+    });
+ 
+    boutonTop.on("pointerup", function(){
+        clickBoutonHaut = false;
+    });
+ 
+    boutonTop.on("pointerout", function(){
+        clickBoutonHaut = false;
+    });
+}
+
+function updateZoomPlayer(){
     if(clickBoutonHaut){
         player.setScale(player.scaleX + 0.1, player.scaleY + 0.1);
     }
     if(clickBoutonBas){
         player.setScale(player.scaleX - 0.1, player.scaleY - 0.1);
     }
+}
 
+function deplacementPlayer() {
     if(isKickDown){
         player.setTexture("player_kick");
     }
