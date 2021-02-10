@@ -14,11 +14,15 @@ var player = null;
 var clickBoutonHaut = false;
 var clickBoutonBas = false;
 var cursor = null;
+var Vkey;
 
 const game = new Phaser.Game(config);
 
 function preload() {
     this.load.image("player", "player.png");
+    this.load.image("player_kick", "player_kick.png");
+    this.load.image("player_walk1", "player_walk1.png");
+    this.load.image("player_walk2", "player_walk2.png");
     this.load.image("haut", "haut.png");
     this.load.image("bas", "bas.png");
 }
@@ -58,7 +62,29 @@ function create() {
     });
 
     cursor = this.input.keyboard.createCursorKeys();
+
+    this.input.keyboard.on("keydown_B", function (){
+        
+    })
+    Vkey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V)
+
+    this.anims.create({
+        key : "playerWalk",
+        frames : [
+            {key : "player_walk1"},
+            {key : "player_walk2"},
+        ],
+        frameRate : 8,
+        repeat : -1
+    });
+    player.anims.play("playerWalk");
 }
+
+
+var isLeftDown  = false;
+var isRightDown = false;
+var isKickDown  = false;
+
 
 function update(time, delta) {
     if(clickBoutonHaut){
@@ -68,19 +94,51 @@ function update(time, delta) {
         player.setScale(player.scaleX - 0.1, player.scaleY - 0.1);
     }
 
-    if(cursor.left.isDown){
+    if(isKickDown){
+        player.setTexture("player_kick");
+    }
+    else if(isLeftDown){
         player.x -= 5;
+        player.anims.play("playerWalk", true);
+        player.setFlip(true, false);
     }
-
-    else if(cursor.right.isDown){
+    else if(isRightDown){
         player.x += 5;
+        player.anims.play("playerWalk", true);
+        player.setFlip(false, false);
+    }
+    else{
+        player.setTexture("player");
     }
 
-    else if(cursor.up.isDown){
+
+    if(cursor.left.isDown){
+        isLeftDown = true;
+    }
+    if(cursor.left.isUp){
+        isLeftDown = false;
+    }
+
+    if(cursor.right.isDown){
+        isRightDown = true;
+    }
+    if(cursor.right.isUp){
+        isRightDown = false;
+    }
+
+    if(Vkey.isDown){
+        isKickDown = true;
+    }
+    if(Vkey.isUp){
+        isKickDown = false;
+        
+    }
+
+     if(cursor.up.isDown){
         player.y -= 5;
     }
-
-    else if(cursor.down.isDown){
+     if(cursor.down.isDown){
         player.y+= 5;
     }
+
 }
