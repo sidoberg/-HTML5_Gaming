@@ -19,6 +19,7 @@ var boutonTop;
 var isLeftDown      = false;
 var isRightDown     = false;
 var isKickDown      = false;
+var isReadyToKick   = true;
 
 const game = new Phaser.Game(config);
 
@@ -30,18 +31,46 @@ function preload() {
     this.load.image("player_walk2", "player_walk2.png");
     this.load.image("haut", "haut.png");
     this.load.image("bas", "bas.png");
+    this.load.image("zombie", "zombie_walk1.png");
+
+    this.load.audio("ready", "ready.ogg");
+    this.load.audio("kick", "kick.ogg");
 }
 
 function create() {
+    this.sound.play("ready");
     var positionCameraCentreX = this.cameras.main.centerX;
     var positionCameraCentreY = this.cameras.main.centerY;
     this.add.sprite(positionCameraCentreX, positionCameraCentreY, "castle");
     player     = this.add.sprite(positionCameraCentreX, positionCameraCentreY, "player");
+    zombie     = this.add.sprite(500, positionCameraCentreY, "zombie");
     boutonDown = this.add.sprite(50, 50, "bas").setInteractive();
     boutonTop  = this.add.sprite(100, 50, "haut").setInteractive();
     cursor     = this.input.keyboard.createCursorKeys();
     Vkey       = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V);
     zoomPlayer();
+
+    var policeTitre = {
+        fontSize : "16px",
+        color : "red",
+        fontFamily: 'Hanalei',
+
+    }
+    this.add.text(positionCameraCentreX, 30, "salut tout le monde", policeTitre)
+
+    zombie.flipX = true;
+    var tween = this.tweens.add({
+        targets : zombie,
+        x : 700,
+        ease : "Linear",
+        Duration : 300,
+        yoyo : true,
+        repeat : -1,
+        onStart : function(){},
+        onComplete : function(){},
+        onYoyo : function(){zombie.flipX = !zombie.flipX},
+        onRepeat : function(){zombie.flipX = !zombie.flipX },
+    });
 
     this.anims.create({
         key : "playerWalk",
@@ -96,8 +125,9 @@ function updateZoomPlayer(){
 }
 
 function deplacementPlayer() {
-    if(isKickDown){
+    if(isKickDown && isReadyToKick){
         player.setTexture("player_kick");
+        game.sound.play("kick");
     }
     else if(isLeftDown){
         player.x -= 5;
@@ -128,11 +158,12 @@ function deplacementPlayer() {
         isRightDown = false;
     }
 
-    if(Vkey.isDown){
+    if(Vkey.isDown && isReadyToKick){
         isKickDown = true;
     }
     if(Vkey.isUp){
         isKickDown = false;
+        isReadyToKick = true;
         
     }
 
