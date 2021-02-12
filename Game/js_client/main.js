@@ -7,6 +7,12 @@ var config ={
         create : create,
         update : update,
     },
+    physics : {
+        default : "arcade",
+        arcade : {
+            gravity : {y : 500}
+        },
+    },
 }
 
 var player          = null;
@@ -32,23 +38,40 @@ function preload() {
     this.load.image("haut", "haut.png");
     this.load.image("bas", "bas.png");
     this.load.image("zombie", "zombie_walk1.png");
+    this.load.image("sol", "sol.png");
 
     this.load.audio("ready", "ready.ogg");
     this.load.audio("kick", "kick.ogg");
+
+    this.load.spritesheet("zombieSPS", "ZombieSpriteSheet.png", {frameWidth : 80, frameHeight: 110});
 }
 
 function create() {
     this.sound.play("ready");
     var positionCameraCentreX = this.cameras.main.centerX;
     var positionCameraCentreY = this.cameras.main.centerY;
+
+
     this.add.sprite(positionCameraCentreX, positionCameraCentreY, "castle");
-    player     = this.add.sprite(positionCameraCentreX, positionCameraCentreY, "player");
+    
+    player     = this.physics.add.sprite(positionCameraCentreX, positionCameraCentreY, "player");
     zombie     = this.add.sprite(500, positionCameraCentreY, "zombie");
     boutonDown = this.add.sprite(50, 50, "bas").setInteractive();
     boutonTop  = this.add.sprite(100, 50, "haut").setInteractive();
     cursor     = this.input.keyboard.createCursorKeys();
     Vkey       = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V);
+
     zoomPlayer();
+    genererAnimations();
+
+    var platforms =this.physics.add.staticGroup();
+    var sol1 = this.add.sprite(100, 550, "sol");
+    var sol2 = this.add.sprite(positionCameraCentreX, 550, "sol");
+
+    platforms.add(sol1);
+    platforms.add(sol2);
+
+    this.physics.add.collider(platforms, player, );
 
     var policeTitre = {
         fontSize : "16px",
@@ -72,7 +95,12 @@ function create() {
         onRepeat : function(){zombie.flipX = !zombie.flipX },
     });
 
-    this.anims.create({
+    this.physics.add.sprite(300, 300).play("zombieStand");
+}
+
+
+function genererAnimations() {
+    game.anims.create({
         key : "playerWalk",
         frames : [
             {key : "player_walk1"},
@@ -82,6 +110,29 @@ function create() {
         repeat : -1
     });
     player.anims.play("playerWalk");
+
+    game.anims.create({
+        key : "zombieWalk",
+        frames : game.anims.generateFrameNumbers("zombieSPS", {start: 2, end: 3}),
+        frameRate : 8,
+        repeat : -1
+    });
+    
+    
+
+    game.anims.create({
+        key : "zombieStand",
+        frames : [{key: "zombieSPS",  frame: 1}],
+        frameRate : 8,
+        repeat : -1
+    });
+
+    game.anims.create({
+        key : "zombieIdle",
+        frames : game.anims.generateFrameNumbers("zombieSPS", {start: 0, end: 1}),
+        frameRate : 8,
+        repeat : -1
+    });
 }
 
 function update(time, delta) {
