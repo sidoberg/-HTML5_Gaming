@@ -37,22 +37,9 @@ var gestionPage = {
 
             case ".png" : 
                 data.contentType = "image/png";
-                data.dossier     = "assets/";
-            break;
+                data.dossier     = "assets/image/";
 
-            case ".png" : 
-                data.contentType = "image/png";
-                data.dossier     = "assets/player/";
-            break;
-
-            case ".png" : 
-            data.contentType = "image/png";
-            data.dossier     = "assets/enemies/";
-            break;
-
-            case ".png" : 
-            data.contentType = "image/png";
-            data.dossier     = "assets/map/";
+                
             break;
 
             case ".jpg" : 
