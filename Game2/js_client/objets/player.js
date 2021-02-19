@@ -2,6 +2,7 @@ var player = {
     aPlayer  : null,
     isJumping: false,
     isAlive  : true,
+    isReadyToJump : true,
 
 
     initialiserPlayer : function (){
@@ -30,30 +31,30 @@ var player = {
     gererDeplacement : function(){
         if(this.isAlive){
             if(jeu.cursor.left.isDown){
-                this.aPlayer.setVelocityX(-200);
-                this.aPlayer.setFlip(true, false);
+               this.aPlayer.setVelocityX(-200);
+               this.aPlayer.setFlip(true, false);
              }
              else if(jeu.cursor.right.isDown){
-                this.aPlayer.setVelocityX(200);
-                this.aPlayer.setFlip(false, false);
+               this.aPlayer.setVelocityX(200);
+               this.aPlayer.setFlip(false, false);
              }
              else{
-                this.aPlayer.setVelocityX(0);   
+               this.aPlayer.setVelocityX(0);   
              }
      
              if(jeu.cursor.up.isDown && this.aPlayer.body.onFloor()){
-                this.aPlayer.setVelocityY(-350);
+               this.aPlayer.setVelocityY(-350);
                  
              }
              if(this.aPlayer.body.onFloor()){
-                this.isJumping = false;
+               this.isJumping = false;
              }
              else{
-                this.isJumping = true;
+               this.isJumping = true;
              }
      
-             if(this.isJumping){
-                this.aPlayer.setTexture("player", "zombie_jump");
+             if(this.isJumping && this.isReadyToJump){
+               this.aPlayer.setTexture("player", "zombie_jump")
              }
              else{
                  if(jeu.cursor.left.isDown){
@@ -68,7 +69,7 @@ var player = {
              }
         }
         else{
-            this.aPlayer.setVelocityX(0);
+            this.aPlayer.setVelocityX(0); 
         }
     },
     killPlayer : function(){

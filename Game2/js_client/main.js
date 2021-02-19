@@ -15,6 +15,9 @@ function preload() {
     jeu.scene.load.atlas("ennemi", "ennemiAdventurer.png", "ennemiAdventurerAtlas.json");
     jeu.scene.load.image("spark", "particle.png");
     jeu.scene.load.audio("gemmeSounds", "gemmeSounds.ogg");
+    jeu.scene.load.audio("loser", "loser.ogg");
+    jeu.scene.load.audio("winner", "winner.ogg");
+    jeu.scene.load.audio("kill", "kill_her.ogg");
     jeu.scene.load.image("validation", "yellow_boxCheckmark.png");
     jeu.scene.load.image("panel", "yellow_panel.png");
 

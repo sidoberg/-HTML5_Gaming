@@ -68,6 +68,7 @@ var world = {
                 fontFamily: "Shadows Into Light Two",
         
             }
+            jeu.scene.sound.play("winner");
             this.mortText = jeu.scene.add.text(jeu.scene.cameras.main.midPoint.x-110, jeu.scene.cameras.main.midPoint.y-100, "Tu as Gagné \n restart Level", policeTitre);
         }
 
@@ -114,7 +115,9 @@ var world = {
         })
     },
     killPlayer : function(){
+        
         if(!this.gameOver){
+            
             this.gameOver = true;
             jeu.player.killPlayer();
             jeu.scene.add.sprite(jeu.scene.cameras.main.midPoint.x, jeu.scene.cameras.main.midPoint.y, "panel").setScale(5, 3);
@@ -129,6 +132,7 @@ var world = {
                 fontFamily: "Shadows Into Light Two",
         
             }
+            jeu.scene.sound.play("loser");
             this.mortText = jeu.scene.add.text(jeu.scene.cameras.main.midPoint.x-110, jeu.scene.cameras.main.midPoint.y-100, "Game Over \n restart Game", policeTitre);
         }
 

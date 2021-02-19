@@ -31,6 +31,7 @@ var ennemiTemplate = {
             },
             attackEnnemi : function(player, ennemi){
                 if(jeu.player.isJumping){
+                    jeu.scene.sound.play("kill");
                     ennemi.destroy();
                 }
                 else{
