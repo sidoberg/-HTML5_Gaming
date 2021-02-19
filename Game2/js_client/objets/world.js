@@ -10,6 +10,9 @@ var world = {
     scoreText    : null,
     mortText     : null,
     gameOver     : false,
+    debutEnnemi  : null,
+    debutEnnemi2 : null,
+    debutEnnemi3 : null,
 
     initialiserWorld : function(){
         this.tilemap       = jeu.scene.make.tilemap({key : 'mapgame'});
@@ -18,7 +21,10 @@ var world = {
         this.worldLayer    = this.tilemap.createStaticLayer("world", this.tileset, 0, 0);
         this.downLayer     = this.tilemap.createStaticLayer("bot", this.tileset, 0, 0);
         this.overlapLayer  = this.tilemap.createDynamicLayer("overlap", this.tileset, 0, 0);
-        this.positionDebut = this.tilemap.findObject("Objets", obj =>  obj.name === "debut");
+        this.positionDebut = this.tilemap.findObject("Objets", obj => obj.name === "debut");
+        this.debutEnnemi   = this.tilemap.findObject("Objets", obj => obj.name === "debutEnnemi");
+        this.debutEnnemi2   = this.tilemap.findObject("Objets", obj => obj.name === "debutEnnemi2");
+        this.debutEnnemi3   = this.tilemap.findObject("Objets", obj => obj.name === "debutEnnemi3");
         
 
         this.worldLayer.setCollisionByProperty({Collides : true});
@@ -39,9 +45,32 @@ var world = {
         this.overlapLayer.setTileIndexCallback(56, this.collectGemme, this);    //gemmeBleu
         this.overlapLayer.setTileIndexCallback(59, this.collectGemme, this);    //gemmeRouge
         this.overlapLayer.setTileIndexCallback(81, this.killPlayer, this);    //pique
+        this.overlapLayer.setTileIndexCallback(28, this.finLevel, this);    //teleportRouge
+
         jeu.scene.physics.add.collider(jeu.player.aPlayer, this.worldLayer);
         jeu.scene.physics.add.overlap(jeu.player.aPlayer, this.overlapLayer);
         
+
+    },
+    finLevel : function(){
+        if(!this.gameOver){
+            this.gameOver = true;
+            jeu.player.killPlayer();
+            jeu.scene.add.sprite(jeu.scene.cameras.main.midPoint.x, jeu.scene.cameras.main.midPoint.y, "panel").setScale(5, 3);
+            var restartBouton = jeu.scene.add.sprite(jeu.scene.cameras.main.midPoint.x, jeu.scene.cameras.main.midPoint.y+100, "validation").setInteractive();
+            restartBouton.on("pointerup", function(){
+                jeu.scene.scene.restart();
+            });
+
+            var policeTitre = {
+                fontSize : "36px",
+                color : "red",
+                fontFamily: "Shadows Into Light Two",
+        
+            }
+            this.mortText = jeu.scene.add.text(jeu.scene.cameras.main.midPoint.x-110, jeu.scene.cameras.main.midPoint.y-100, "Tu as Gagné \n restart Level", policeTitre);
+        }
+
     },
     gererCamera : function(){
         jeu.scene.cameras.main.startFollow(jeu.player.aPlayer);
@@ -104,6 +133,5 @@ var world = {
         }
 
     },
-
 }
 

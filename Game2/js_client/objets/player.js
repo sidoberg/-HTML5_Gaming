@@ -3,8 +3,9 @@ var player = {
     isJumping: false,
     isAlive  : true,
 
+
     initialiserPlayer : function (){
-      this.aPlayer = jeu.scene.physics.add.sprite(jeu.world.positionDebut.x, jeu.world.positionDebut.y, "player");
+      this.aPlayer = jeu.scene.physics.add.sprite(jeu.world.positionDebut.x, jeu.world.positionDebut.y, "player"); 
       this.aPlayer.setCollideWorldBounds(true);
       this.aPlayer.setOrigin(0.5, 1);
     },
